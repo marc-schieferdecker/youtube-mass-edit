@@ -1,0 +1,103 @@
+{{#if youtubeAuthTokens.access_token}}
+    {{#if youtubeVideos.length}}
+        {{#if youtubeVideosLoadingComplete}}
+            {{#if youtubeChannelSnippet.thumbnails.default.url}}
+                <div>
+                    <img src="{{youtubeChannelSnippet.thumbnails.default.url}}" class="rounded-circle"/>
+                </div>
+            {{/if}}
+            <div>
+                {{#if youtubeChannelSnippet.title}}
+                    {{youtubeChannelSnippet.title}} -
+                {{/if}}
+                {{youtubeVideos.length}} videos
+            </div>
+            <div class="card card-body mt-5">
+                <div class="row">
+                    <div class="form-group col-6">
+                        <label for="search">Search for...</label>
+                        <input type="text" id="search" class="form-control"/>
+                    </div>
+                    <div class="form-group col-6">
+                        <label for="replace">Replace with...</label>
+                        <input type="text" id="replace" class="form-control"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-6">
+                        <input type="checkbox" id="regex"/> <label for="regex">regular expression</label>
+                    </div>
+                    <div class="form-group col-6">
+                        <input type="checkbox" id="replacenewlines"/> <label for="replacenewlines">replace \n with new line</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-12 text-center">
+                        <button class="btn btn-primary" onclick="searchAndReplace(); $(this).blur();">Search &amp; Replace</button>
+                    </div>
+                </div>
+                <div>
+                    <a data-toggle="collapse" href="#templates" role="button" aria-expanded="false" aria-controls="collapseExample">Useful templates</a>
+                </div>
+                <div id="templates" class="collapse card card-body">
+                    <ul>
+                        <li><a href="javascript:void(0)" onclick="applyReplacemenetTemplate(1)">Reduce multiple empty lines to one empty line</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <form action="/videos/update" method="post" onsubmit="$('.notchanged').remove();">
+                <div class="row mt-5 d-none" id="submitVideos">
+                    <div class="form-group col-12 text-center">
+                        <input type="submit" value="Update changed videos" class="btn btn-danger"/>
+                    </div>
+                </div>
+                <ul class="list-group mt-5">
+                    {{#each youtubeVideos}}
+                        <li class="list-group-item notchanged">
+                            <a data-toggle="collapse" href="#video{{@index}}" role="button" aria-expanded="false" aria-controls="collapseExample">{{snippet.title}}</a>
+                        </li>
+                        <li id="video{{@index}}" class="list-group-item collapse notchanged">
+                            <input type="hidden" name="videoId[]" value="{{id}}"/>
+                            <textarea onchange="markVideoAsChanged($(this));" name="videoDescription[]" class="form-control video-description" style="height:300px">{{snippet.description}}</textarea>
+                        </li>
+                    {{/each}}
+                </ul>
+            </form>
+        {{else}}
+            {{#if youtubeAuthError}}
+                <p class="mt-5">
+                    Your authentication token became invalid. Please reauthenticate.
+                </p>
+                <p class="mt-5">
+                    <a href="/auth/oauth" class="btn btn-success mt-3 mb-3">Reauthenticate now!</a>
+                </p>
+            {{else}}
+                Still loading videos. {{youtubeVideos.length}} loaded.
+                <script>reloadVideoPage();</script>
+            {{/if}}
+        {{/if}}
+    {{else}}
+        {{#if youtubeVideosLoading}}
+            Loading videos.
+            <script>reloadVideoPage();</script>
+        {{else}}
+            <p class="mt-5">
+                Your authentication token became invalid. Please reauthenticate.
+            </p>
+            <p class="mt-5">
+                <a href="/auth/oauth" class="btn btn-success mt-3 mb-3">Reauthenticate now!</a>
+            </p>
+        {{/if}}
+    {{/if}}
+{{else}}
+    <p class="mt-5">
+        To edit your videos you have to authenticate with the YouTube API.<br/>
+        Please click the "Authenticate now!" button below then select your account and on the second page the YouTube channel which videos you want to edit.<br/>
+        <br/>
+        The authentication token is only stored in your browsers session on your local device and you have to reauthenticate every time you use this tool again.
+    </p>
+    <p class="mt-5">
+        <a href="/auth/oauth" class="btn btn-success mt-3 mb-3">Authenticate now!</a>
+    </p>
+{{/if}}

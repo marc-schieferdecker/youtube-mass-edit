@@ -1,0 +1,6 @@
+# .gitignore
+google-credentials.json
+node_modules
+public/google6cc5c9b437127b7a.html
+.idea
+

@@ -1,0 +1,10 @@
+{{#if error}}
+    {{#ifCond error '===' 'nodata'}}
+        <div class="alert alert-danger mt-5">No data submitted.</div>
+    {{/ifCond}}
+    {{#ifCond error '===' 'auth'}}
+        <div class="alert alert-danger mt-5">Authentication problem. Please reauthenticate</div>
+    {{/ifCond}}
+{{else}}
+    <div class="alert alert-success">Your updates are right now being submitted to YouTube in the background.</div>
+{{/if}}

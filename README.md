@@ -23,7 +23,7 @@ You will need...
 5) Change to the directory where you unpacked the sources
 6) Run "npm i" to install all node modules
 7) Run "node start" (or "node bin/www" if you get an error)
-8) Open browser and head to "localhost:3000" (if not a local machine, enter <servers-ipaddr>:3000)
+8) Open browser and head to "localhost:3000" (if not a local machine, enter servers-ipaddr:3000)
 
 **Usage**
 

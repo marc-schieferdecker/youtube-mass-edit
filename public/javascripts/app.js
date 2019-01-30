@@ -4,6 +4,52 @@
  */
 
 /**
+ * Search and mark results
+ */
+function searchAndMark() {
+    let reg = $('#regex').is(':checked');
+    let replacenl = $('#replacenewlines').is(':checked');
+    let s = $('#search').val();
+    let r = replacenl ? $('#replace').val().replace("\\n", "\n") : $('#replace').val();
+    let changeCounter = 0;
+
+    if(s.length) {
+        $('.video-description').each( function(index) {
+                let t = '';
+                let c = $(this).val();
+                if(reg) {
+                    let expr = regExpFromString(s);
+                    if(expr) {
+                        t = c.replace(expr,r).trim();
+                    }
+                    else {
+                        alert('RegEx error.');
+                    }
+                }
+                else {
+                    t = c.replace(s,r).trim();
+                }
+                if(t !== c) {
+                    changeCounter++;
+                    markVideoWouldBeChanged($(this));
+                }
+            }
+        );
+        if(changeCounter > 0) {
+            if(changeCounter === 1) {
+                showModal( 'Results', changeCounter + ' video that matched your search expression was found and marked.' );
+            }
+            else {
+                showModal( 'Results', changeCounter + ' videos that matched your search expression where found and marked.' );
+            }
+        }
+        else {
+            showModal( 'Results', 'No videos matched your search expression.' );
+        }
+    }
+}
+
+/**
  * Search and replace
  */
 function searchAndReplace() {
@@ -15,7 +61,7 @@ function searchAndReplace() {
 
     if(s.length) {
         $('.video-description').each( function(index) {
-                c = $(this).val();
+                let c = $(this).val();
                 if(reg) {
                     let expr = regExpFromString(s);
                     if(expr) {
@@ -34,8 +80,13 @@ function searchAndReplace() {
                 }
             }
         );
-        if(changeCounter) {
-            showModal( 'Results', (changeCounter+1) + ' videos where changed.' );
+        if(changeCounter > 0) {
+            if(changeCounter === 1) {
+                showModal( 'Results', changeCounter + ' video was changed.' );
+            }
+            else {
+                showModal( 'Results', changeCounter + ' videos where changed.' );
+            }
             $('#submitVideos').removeClass('d-none');
         }
         else {
@@ -112,4 +163,13 @@ function markVideoAsChanged(el) {
     el.parent().prev().addClass('changed');
     el.parent().prev().removeClass('notchanged');
     $('#submitVideos').removeClass('d-none');
+}
+
+/**
+ * Mark video in that changes where found
+ * @param el
+ */
+function markVideoWouldBeChanged(el) {
+    el.parent().addClass('hit');
+    el.parent().prev().addClass('hit');
 }

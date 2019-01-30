@@ -70,7 +70,7 @@ router.get('/oauth', function(req, res, next) {
             redirect_url: youtubeCredentials.web.redirect_uris[0]
         });
         res.redirect(oauth.generateAuthUrl({
-            access_type: "online",
+            access_type: "offline",
             prompt: "consent",
             scope: [
                 "https://www.googleapis.com/auth/youtube",
@@ -93,6 +93,7 @@ router.get('/callback', function(req, res, next) {
     if(req.query.code) {
         oauth.getToken(req.query.code, (err, tokens) => {
             req.session.youtubeAuthTokens = tokens;
+            console.log(tokens);
             youtubeAuthError[sessionID] = false;
             oauth.setCredentials(tokens);
             render(req, res, next);

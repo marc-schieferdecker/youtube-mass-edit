@@ -1,16 +1,17 @@
-{{#if youtubeAuthError}}
-    <p class="mt-5">
-        Your authentication token became invalid. Please reauthenticate.
-    </p>
-    <p class="mt-5">
-        <a href="/auth/oauth" class="btn btn-success mt-3 mb-3">Reauthenticate now!</a>
-    </p>
-{{else}}
-    {{#if youtubeAuthTokens.access_token}}
+{{#if cookie.youtubeAuthTokens.access_token}}
+    {{#if session.youtubeAuthError}}
+        <p class="mt-5">
+            Your authentication token became invalid. Please reauthenticate.
+        </p>
+        <p class="mt-5">
+            <a href="/auth/oauth" class="btn btn-success mt-3 mb-3">Reauthenticate now!</a>
+        </p>
+    {{else}}
         <p class="alert alert-success mt-5">
             Congratulations! You're authentication was successful.
         </p>
-    {{else}}
+    {{/if}}
+{{else}}
         <p class="mt-5">
             To edit your videos you have to authenticate with the YouTube API.<br/>
             Please click the "Authenticate now!" button below then select your account and on the second page the YouTube channel which videos you want to edit.<br/>
@@ -20,5 +21,4 @@
         <p class="mt-5">
             <a href="/auth/oauth" class="btn btn-success mt-3 mb-3">Authenticate now!</a>
         </p>
-    {{/if}}
 {{/if}}

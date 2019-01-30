@@ -1,16 +1,16 @@
-{{#if youtubeAuthTokens.access_token}}
-    {{#if youtubeVideos.length}}
-        {{#if youtubeVideosLoadingComplete}}
-            {{#if youtubeChannelSnippet.thumbnails.default.url}}
+{{#if cookie.youtubeAuthTokens.access_token}}
+    {{#if session.youtubeVideos.length}}
+        {{#if session.youtubeVideosLoadingComplete}}
+            {{#if session.youtubeChannelSnippet.thumbnails.default.url}}
                 <div>
-                    <img src="{{youtubeChannelSnippet.thumbnails.default.url}}" class="rounded-circle"/>
+                    <img src="{{session.youtubeChannelSnippet.thumbnails.default.url}}" class="rounded-circle"/>
                 </div>
             {{/if}}
             <div>
-                {{#if youtubeChannelSnippet.title}}
-                    {{youtubeChannelSnippet.title}} -
+                {{#if session.youtubeChannelSnippet.title}}
+                    {{session.youtubeChannelSnippet.title}} -
                 {{/if}}
-                {{youtubeVideos.length}} videos
+                {{session.youtubeVideos.length}} videos
             </div>
             <div class="card card-body mt-5">
                 <div class="row">
@@ -54,7 +54,7 @@
                     </div>
                 </div>
                 <ul class="list-group mt-5">
-                    {{#each youtubeVideos}}
+                    {{#each session.youtubeVideos}}
                         <li class="list-group-item notchanged">
                             <a data-toggle="collapse" href="#video{{@index}}" role="button" aria-expanded="false" aria-controls="collapseExample">{{snippet.title}}</a>
                         </li>
@@ -66,7 +66,7 @@
                 </ul>
             </form>
         {{else}}
-            {{#if youtubeAuthError}}
+            {{#if session.youtubeAuthError}}
                 <p class="mt-5">
                     Your authentication token became invalid. Please reauthenticate.
                 </p>
@@ -74,12 +74,12 @@
                     <a href="/auth/oauth" class="btn btn-success mt-3 mb-3">Reauthenticate now!</a>
                 </p>
             {{else}}
-                Still loading videos. {{youtubeVideos.length}} loaded.
+                Still loading videos. {{session.youtubeVideos.length}} loaded.
                 <script>reloadVideoPage();</script>
             {{/if}}
         {{/if}}
     {{else}}
-        {{#if youtubeVideosLoading}}
+        {{#if session.youtubeVideosLoading}}
             Loading videos.
             <script>reloadVideoPage();</script>
         {{else}}

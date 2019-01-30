@@ -34,9 +34,7 @@ You will need...
 Notices
 =======
 
-The YouTube API only will let you do a maximum of 10,000 requests per 24 hours and updating a video will count 50 requests.
-
-The OAuth2 token will only be valid for 60 minutes (refresh_token is not implemented).
+The YouTube API only will let you do a maximum of 10,000 requests per 24 hours and updating a video will count 52 requests. So if you update 400 videos that will not work on a single day. Thx Google... 
 
 Use carefully! There is no way to undo submitted changes!
 

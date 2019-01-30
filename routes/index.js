@@ -11,7 +11,8 @@ router.get('/', function(req, res, next) {
             activeNav: {
                 index: true
             },
-            youtubeAuthTokens: req.session.youtubeAuthTokens
+            cookie: req.session,
+            session: session
         }
     );
 });

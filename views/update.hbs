@@ -1,8 +1,8 @@
-{{#if error}}
-    {{#ifCond error '===' 'nodata'}}
+{{#if result.error}}
+    {{#ifCond result.error '===' 'nodata'}}
         <div class="alert alert-danger mt-5">No data submitted.</div>
     {{/ifCond}}
-    {{#ifCond error '===' 'auth'}}
+    {{#ifCond result.error '===' 'auth'}}
         <div class="alert alert-danger mt-5">Authentication problem. Please reauthenticate</div>
     {{/ifCond}}
 {{else}}

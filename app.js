@@ -15,12 +15,8 @@ conf = require('./config.json');
 // Load YouTube API credentials
 youtubeCredentials = require(conf.googleCredentialsFile);
 
-// Global variables for storage because session can not be used (google-api does not support promises!
-youtubeChannelSnippet = {};
-youtubeVideos = {};
-youtubeVideosLoading = {};
-youtubeVideosLoadingComplete = {};
-youtubeAuthError = {};
+// Memory store
+session = require("./modules/ytmassedit-memory-session");
 
 // Configure routes
 var indexRouter = require('./routes/index');
@@ -45,31 +41,8 @@ initSession = (req) => {
     if(typeof req.session.sessionID !== 'string') {
         req.session.sessionID = crypto.randomBytes(20).toString('hex');
     }
-    if(typeof youtubeChannelSnippet[req.session.sessionID] === 'undefined') {
-        youtubeChannelSnippet = {
-            [req.session.sessionID]: {}
-        };
-    }
-    if(typeof youtubeVideos[req.session.sessionID] === 'undefined') {
-        youtubeVideos = {
-            [req.session.sessionID]: []
-        };
-    }
-    if(typeof youtubeVideosLoading[req.session.sessionID] === 'undefined') {
-        youtubeVideosLoading = {
-            [req.session.sessionID]: false
-        };
-    }
-    if(typeof youtubeVideosLoadingComplete[req.session.sessionID] === 'undefined') {
-        youtubeVideosLoadingComplete = {
-            [req.session.sessionID]: false
-        };
-    }
-    if(typeof youtubeAuthError[req.session.sessionID] === 'undefined') {
-        youtubeAuthError = {
-            [req.session.sessionID]: false
-        };
-    }
+    // Init memory session objects
+    session.init(req.session.sessionID);
 };
 
 // View engine setup (handlebars)

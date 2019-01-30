@@ -1,11 +1,13 @@
+var Promise = require("bluebird");
 var express = require('express');
 var router = express.Router();
 var Youtube = require("youtube-api");
-var oauth = {};
+var ytmasseditHelper = require("../modules/ytmassedit-helper-module");
+var oauth = {}; // OAuth client object
 
 // Render auth page
-function render(req, res, next) {
-    let sessionID = req.session.sessionID;
+function render(req, res, next, result) {
+    result = typeof result !== 'undefined' ? result : false;
 
     // Render page
     res.render(
@@ -14,8 +16,9 @@ function render(req, res, next) {
             activeNav: {
                 auth:true
             },
-            youtubeAuthTokens: req.session.youtubeAuthTokens,
-            youtubeAuthError: youtubeAuthError[sessionID]
+            result: result,
+            session: session.getData(req.session.sessionID),
+            cookie: req.session
         }
     );
 }
@@ -23,36 +26,20 @@ function render(req, res, next) {
 /**
  * Show auth page
  */
-router.get('/', function(req, res, next) {
+router.get('/', (req, res, next) => {
     initSession(req);
-    let sessionID = req.session.sessionID;
 
     // Check auth with a simple request on own channel
-    if(req.session.youtubeAuthTokens.access_token) {
-        Youtube.authenticate({
-            type: "oauth",
-            client_id: youtubeCredentials.web.client_id,
-            client_secret: youtubeCredentials.web.client_secret,
-            redirect_url: youtubeCredentials.web.redirect_uris[0],
-            access_token: req.session.youtubeAuthTokens.access_token
-        });
-        Youtube.channels.list(
-            {
-                mine: true,
-                part: "id"
-            },
-            (err, data) => {
-                if (err !== null) {
-                    youtubeVideosLoading[sessionID] = false;
-                    youtubeVideosLoadingComplete[sessionID] = false;
-                    youtubeAuthError[sessionID] = true;
-                }
-                render(req, res, next);
-            }
-        );
-    } else {
-        render(req, res, next);
-    }
+    ytmasseditHelper.ytAuthenticate( youtubeCredentials, req.session.youtubeAuthTokens );
+    ytmasseditHelper.ytCheckAuth()
+    .then((data) => {
+        render(req, res, next, data);
+    }).catch((error) => {
+        session.setYoutubeVideosLoading(req.session.sessionID,false);
+        session.setYoutubeVideosLoadingComplete(req.session.sessionID,false);
+        session.setYoutubeAuthError(req.session.sessionID,true);
+        render(req, res, next, error);
+    });
 });
 
 /**
@@ -63,45 +50,25 @@ router.get('/oauth', function(req, res, next) {
 
     // Auth
     if(youtubeCredentials.web) {
-        oauth = Youtube.authenticate({
-            type: "oauth",
-            client_id: youtubeCredentials.web.client_id,
-            client_secret: youtubeCredentials.web.client_secret,
-            redirect_url: youtubeCredentials.web.redirect_uris[0]
-        });
-        res.redirect(oauth.generateAuthUrl({
-            access_type: "offline",
-            prompt: "consent",
-            scope: [
-                "https://www.googleapis.com/auth/youtube",
-                "https://www.googleapis.com/auth/youtube.readonly",
-                "https://www.googleapis.com/auth/youtube.upload",
-                "https://www.googleapis.com/auth/youtube.force-ssl",
-                "https://www.googleapis.com/auth/youtubepartner"
-            ]
-        }));
+        oauth = ytmasseditHelper.ytAuthenticate( youtubeCredentials );
+        res.redirect(ytmasseditHelper.ytGetAuthURL());
     }
 });
 
 /**
- * Store auth token
+ * Genereate and store auth token
  */
 router.get('/callback', function(req, res, next) {
     initSession(req);
-    let sessionID = req.session.sessionID;
 
-    if(req.query.code) {
-        oauth.getToken(req.query.code, (err, tokens) => {
-            req.session.youtubeAuthTokens = tokens;
-            console.log(tokens);
-            youtubeAuthError[sessionID] = false;
-            oauth.setCredentials(tokens);
-            render(req, res, next);
-        });
-    }
-    else {
-        render(req, res, next);
-    }
+    ytmasseditHelper.ytGetTokens(oauth,req.query.code)
+    .then((tokens) => {
+        req.session.youtubeAuthTokens = tokens;
+        session.setYoutubeAuthError(req.session.sessionID,false);
+        render(req, res, next, tokens);
+    }).catch((error) => {
+        render(req, res, next, error);
+    });
 });
 
 module.exports = router;

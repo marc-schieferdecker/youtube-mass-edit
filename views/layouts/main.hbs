@@ -22,7 +22,7 @@
           <nav class="nav nav-masthead justify-content-center">
             <a id="nav-index" class="nav-link {{#if activeNav.index}}active{{/if}}" href="/">Home</a>
             <a id="nav-auth" class="nav-link {{#if activeNav.auth}}active{{/if}}" href="/auth">Auth</a>
-            {{#if youtubeAuthTokens.access_token}}
+            {{#if cookie.youtubeAuthTokens.access_token}}
                 <a id="nav-videos" class="nav-link {{#if activeNav.videos}}active{{/if}}" href="/videos">Videos</a>
             {{/if}}
           </nav>

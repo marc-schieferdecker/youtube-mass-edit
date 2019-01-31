@@ -17,4 +17,36 @@ router.get('/', function(req, res, next) {
     );
 });
 
+/* GET privacy page. */
+router.get('/privacy', function(req, res, next) {
+    initSession(req);
+
+    res.render(
+        'privacy', {
+            title: 'Privacy policy',
+            activeNav: {
+                index: true
+            },
+            cookie: req.session,
+            session: session
+        }
+    );
+});
+
+/* GET contact page. */
+router.get('/contact', function(req, res, next) {
+    initSession(req);
+
+    res.render(
+        'contact', {
+            title: 'Developer contact',
+            activeNav: {
+                index: true
+            },
+            cookie: req.session,
+            session: session
+        }
+    );
+});
+
 module.exports = router;

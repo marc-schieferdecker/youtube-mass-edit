@@ -51,7 +51,7 @@ router.get('/oauth', function(req, res, next) {
     // Auth
     if(youtubeCredentials.web) {
         oauth = ytmasseditHelper.ytAuthenticate( youtubeCredentials );
-        res.redirect(ytmasseditHelper.ytGetAuthURL());
+        res.redirect(ytmasseditHelper.ytGetAuthURL(oauth));
     }
 });
 

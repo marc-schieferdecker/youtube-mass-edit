@@ -106,6 +106,10 @@ function applyReplacemenetTemplate( tpl ) {
         $('#search').val("/^\\s*[\\r\\n]/gm");
         $('#replace').val("\\n");
     }
+    if( tpl === 2) {
+        $('#regex').attr('checked', true);
+        $('#search').val("/"+prompt("Enter search term")+"/i");
+    }
 }
 
 /**

@@ -67,6 +67,8 @@ router.get('/', (req, res, next) => {
 /* POST update page */
 router.post('/update', (req, res, next) => {
     initSession(req);
+    // Clear update log
+    session.setYoutubeVideosUpdateLog(req.session.sessionID, []);
 
     if(typeof req.body.videoId === 'object') {
         if(req.session.youtubeAuthTokens.access_token && session.getYoutubeAuthError(req.session.sessionID) === false && session.getYoutubeVideos(req.session.sessionID).length) {
@@ -89,7 +91,7 @@ router.post('/update', (req, res, next) => {
                     }
                     // Send update
                     if(videoSnippet !== null) {
-                        ytmasseditHelper.ytUpdateVideo(videoId, videoSnippet.title, videoSnippet.categoryId, videoSnippet.defaultLanguage, videoSnippet.description, videoSnippet.tags);
+                        ytmasseditHelper.ytUpdateVideo(req.session.sessionID, videoId, videoSnippet.title, videoSnippet.categoryId, videoSnippet.defaultLanguage, videoSnippet.description, videoSnippet.tags);
                     }
                 }
             }

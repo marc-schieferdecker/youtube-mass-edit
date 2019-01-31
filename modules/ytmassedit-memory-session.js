@@ -6,6 +6,7 @@ let self = module.exports = {
     youtubeVideos: {},
     youtubeVideosLoading: {},
     youtubeVideosLoadingComplete: {},
+    youtubeVideosUpdateLog: {},
     youtubeAuthError: {},
 
     init: (id) => {
@@ -23,6 +24,10 @@ let self = module.exports = {
 
         if (typeof self.youtubeVideosLoadingComplete[id] === 'undefined') {
             self.youtubeVideosLoadingComplete[id] = false;
+        }
+
+        if (typeof self.youtubeVideosUpdateLog[id] === 'undefined') {
+            self.youtubeVideosUpdateLog[id] = [];
         }
 
         if (typeof self.youtubeAuthError[id] === 'undefined') {
@@ -70,6 +75,18 @@ let self = module.exports = {
         return self.youtubeVideosLoadingComplete[id];
     },
 
+    setYoutubeVideosUpdateLog: (id,value) => {
+        self.youtubeVideosUpdateLog[id] = value;
+    },
+
+    addYoutubeVideosUpdateLog: (id,value) => {
+        self.youtubeVideosUpdateLog[id].push(value);
+    },
+
+    getYoutubeVideosUpdateLog: (id) => {
+        return self.youtubeVideosUpdateLog[id];
+    },
+
     setYoutubeAuthError: (id,value) => {
         self.youtubeAuthError[id] = value;
     },
@@ -88,6 +105,7 @@ let self = module.exports = {
             youtubeVideos: self.getYoutubeVideos(id),
             youtubeVideosLoading: self.getYoutubeVideosLoading(id),
             youtubeVideosLoadingComplete: self.getYoutubeVideosLoadingComplete(id),
+            youtubeVideosUpdateLog: self.getYoutubeVideosUpdateLog(id),
             youtubeAuthError: self.getYoutubeAuthError(id),
         }
     }

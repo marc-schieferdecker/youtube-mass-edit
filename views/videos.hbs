@@ -12,6 +12,26 @@
                 {{/if}}
                 {{session.youtubeVideos.length}} videos
             </div>
+            {{#if session.youtubeVideosUpdateLog.length}}
+                <div class="card card-body mt-2">
+                    <a data-toggle="collapse" href="#updatelog" role="button" aria-expanded="false" aria-controls="collapseUpdatelog">Check the log of your last update operation</a>
+                    <ul id="updatelog" class="collapse list-group mt-2">
+                        {{#each session.youtubeVideosUpdateLog}}
+                            <li class="list-group-item">
+                                <span class="{{result}}">
+                                    {{#ifCond result '===' 'success'}}
+                                        OK: {{title}}
+                                    {{/ifCond}}
+                                    {{#ifCond result '===' 'error'}}
+                                        ERROR: {{title}}
+                                        <pre>{{log error}}</pre>
+                                    {{/ifCond}}
+                                </span>
+                            </li>
+                        {{/each}}
+                    </ul>
+                </div>
+            {{/if}}
             <div class="card card-body mt-5">
                 <div class="row">
                     <div class="form-group col-6">
@@ -33,30 +53,34 @@
                 </div>
                 <div class="row">
                     <div class="form-group col-12 text-center">
-                        <button class="btn btn-success" onclick="searchAndMark(); $(this).blur();">Just search</button>
-                        <button class="btn btn-primary" onclick="searchAndReplace(); $(this).blur();">Search &amp; Replace</button>
+                        <button class="btn btn-success" onclick="$('.hit').removeClass('hit'); $('.videotitle.notchanged').show(); searchAndMark(); $(this).blur();">Just search</button>
+                        <button class="btn btn-primary" onclick="$('.videotitle.notchanged').show(); searchAndReplace(); $(this).blur();">Search &amp; replace</button>
                     </div>
                 </div>
                 <div>
-                    <a data-toggle="collapse" href="#templates" role="button" aria-expanded="false" aria-controls="collapseExample">Useful templates</a>
+                    <a data-toggle="collapse" href="#templates" role="button" aria-expanded="false" aria-controls="collapseTemplates">Useful templates</a>
                 </div>
                 <div id="templates" class="collapse card card-body">
-                    <ul>
-                        <li><a href="javascript:void(0)" onclick="applyReplacemenetTemplate(1)">Reduce multiple empty lines to one empty line</a></li>
+                    <ul class="list-group">
+                        <li class="list-group-item"><a href="javascript:void(0)" onclick="applyReplacemenetTemplate(1)">Reduce multiple empty lines to one empty line</a></li>
+                        <li class="list-group-item"><a href="javascript:void(0)" onclick="applyReplacemenetTemplate(2)">Search case-insensitive</a></li>
                     </ul>
                 </div>
             </div>
 
-            <form action="/videos/update" method="post" onsubmit="$('.notchanged').remove();">
+            <form action="/videos/update" method="post" onsubmit="$('.notchanged').remove();" class="mb-5">
                 <div class="row mt-5 d-none" id="submitVideos">
                     <div class="form-group col-12 text-center">
                         <input type="submit" value="Update changed videos" class="btn btn-danger"/>
                     </div>
                 </div>
                 <ul class="list-group mt-5">
+                    <li class="list-group-item">
+                        <a href="javascript:void(0)" class="btn btn-primary" onclick="$('.videotitle.notchanged').toggle(); $('.videotitle.notchanged').filter('.hit').show();">Toggle unimportant data</a>
+                    </li>
                     {{#each session.youtubeVideos}}
-                        <li class="list-group-item notchanged">
-                            <a data-toggle="collapse" href="#video{{@index}}" role="button" aria-expanded="false" aria-controls="collapseExample">{{snippet.title}}</a>
+                        <li class="list-group-item videotitle notchanged">
+                            <a data-toggle="collapse" href="#video{{@index}}" role="button" aria-expanded="false" aria-controls="collapseVideo">{{snippet.title}}</a>
                         </li>
                         <li id="video{{@index}}" class="list-group-item collapse notchanged">
                             <input type="hidden" name="videoId[]" value="{{id}}"/>

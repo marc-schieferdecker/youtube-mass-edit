@@ -196,7 +196,7 @@ let self = module.exports = {
      * @param tags
      * @returns {Promise<void>}
      */
-    ytUpdateVideo: async (id, title, categoryId, defaultLanguage, description, tags) => {
+    ytUpdateVideo: async (sessionID, id, title, categoryId, defaultLanguage, description, tags) => {
         self.Youtube.videos.update(
             {
                 part: "snippet",
@@ -213,9 +213,20 @@ let self = module.exports = {
             },
             (err, data) => {
                 if (err === null) {
-
+                    session.addYoutubeVideosUpdateLog(sessionID, {
+                        id: id,
+                        title: title,
+                        result: 'success',
+                        error: null
+                    });
                 }
                 else {
+                    session.addYoutubeVideosUpdateLog(sessionID, {
+                        id: id,
+                        title: title,
+                        result: 'error',
+                        error: err
+                    });
                     console.log(err);
                 }
             }

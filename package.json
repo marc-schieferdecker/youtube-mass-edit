@@ -16,7 +16,7 @@
     "express-session": "~1.15.6",
     "font-awesome": "~4.7.0",
     "express-handlebars": "~3.0.0",
-    "hoek": "~6.1.2"
+    "hoek": "~6.1.2",
     "http-errors": "~1.6.2",
     "jquery": "~3.3.1",
     "less-middleware": "~2.2.1",

@@ -10,7 +10,7 @@ function searchAndMark() {
     let reg = $('#regex').is(':checked');
     let replacenl = $('#replacenewlines').is(':checked');
     let s = $('#search').val();
-    let r = replacenl ? $('#replace').val().replace("\\n", "\n") : $('#replace').val();
+    let r = replacenl ? $('#replace').val().replace(/\\n/g, "\n") : $('#replace').val();
     let changeCounter = 0;
 
     if(s.length) {
@@ -27,7 +27,7 @@ function searchAndMark() {
                     }
                 }
                 else {
-                    t = c.replace(s,r).trim();
+                    t = c.replace(regExpFromString("/"+s+"/g"),r).trim();
                 }
                 if(t !== c) {
                     changeCounter++;
@@ -56,7 +56,7 @@ function searchAndReplace() {
     let reg = $('#regex').is(':checked');
     let replacenl = $('#replacenewlines').is(':checked');
     let s = $('#search').val();
-    let r = replacenl ? $('#replace').val().replace("\\n", "\n") : $('#replace').val();
+    let r = replacenl ? $('#replace').val().replace(/\\n/g, "\n") : $('#replace').val();
     let changeCounter = 0;
 
     if(s.length) {
@@ -72,7 +72,7 @@ function searchAndReplace() {
                     }
                 }
                 else {
-                    $(this).val(c.replace(s,r).trim());
+                    $(this).val(c.replace(regExpFromString("/"+s+"/g"),r).trim());
                 }
                 if($(this).val() !== c) {
                     changeCounter++;

@@ -71,18 +71,18 @@
             <form action="/videos/update" method="post" onsubmit="$('.notchanged').remove();" class="mb-5">
                 <div class="row mt-5 d-none" id="submitVideos">
                     <div class="form-group col-12 text-center">
-                        <input type="submit" value="Update changed videos" class="btn btn-danger"/>
+                        <input type="submit" value="Update changed videos" class="btn btn-danger" onclick="return confirm('Send modifications to YouTube?')"/>
                     </div>
                 </div>
                 <ul class="list-group mt-5">
                     <li class="list-group-item">
-                        <a href="javascript:void(0)" class="btn btn-primary" onclick="$('.videotitle.notchanged').toggle(); $('.videotitle.notchanged').filter('.hit').show();">Toggle unimportant data</a>
+                        <a href="javascript:void(0)" class="btn btn-primary" onclick="$('.videodescription').collapse('hide'); $('.videotitle.notchanged').toggle(); $('.videotitle.notchanged').filter('.hit').show();">Toggle not-relevant for update</a>
                     </li>
                     {{#each session.youtubeVideos}}
                         <li class="list-group-item videotitle notchanged">
                             <a data-toggle="collapse" href="#video{{@index}}" role="button" aria-expanded="false" aria-controls="collapseVideo">{{snippet.title}}</a>
                         </li>
-                        <li id="video{{@index}}" class="list-group-item collapse notchanged">
+                        <li id="video{{@index}}" class="list-group-item collapse videodescription notchanged">
                             <input type="hidden" name="videoId[]" value="{{id}}"/>
                             <textarea onchange="markVideoAsChanged($(this));" name="videoDescription[]" class="form-control video-description" style="height:300px">{{snippet.description}}</textarea>
                         </li>

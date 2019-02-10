@@ -20,10 +20,10 @@
                             <li class="list-group-item">
                                 <span class="{{result}}">
                                     {{#ifCond result '===' 'success'}}
-                                        OK: {{title}}
+                                        <i class="fa fa-check" aria-hidden="true"></i> {{title}}
                                     {{/ifCond}}
                                     {{#ifCond result '===' 'error'}}
-                                        ERROR: {{title}}
+                                        <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> {{title}}
                                         <pre>{{log error}}</pre>
                                     {{/ifCond}}
                                 </span>
@@ -64,6 +64,7 @@
                     <ul class="list-group">
                         <li class="list-group-item"><a href="javascript:void(0)" onclick="applyReplacemenetTemplate(1)">Reduce multiple empty lines to one empty line</a></li>
                         <li class="list-group-item"><a href="javascript:void(0)" onclick="applyReplacemenetTemplate(2)">Search case-insensitive</a></li>
+                        <li class="list-group-item"><a href="javascript:void(0)" onclick="applyReplacemenetTemplate(3)">Search in multiple lines</a></li>
                     </ul>
                 </div>
             </div>

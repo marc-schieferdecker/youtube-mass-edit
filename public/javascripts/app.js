@@ -110,6 +110,10 @@ function applyReplacemenetTemplate( tpl ) {
         $('#regex').attr('checked', true);
         $('#search').val("/"+prompt("Enter search term")+"/i");
     }
+    if( tpl === 3) {
+        $('#regex').attr('checked', true);
+        $('#search').val("first line[\\n]next line");
+    }
 }
 
 /**
